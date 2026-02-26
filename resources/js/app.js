@@ -115,6 +115,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // Initialize navigation
     const navigationManager = new NavigationManager();
+
+    // Rotating role titles
+        const roles = ['Software Engineer', 'Web Developer', 'Backend Developer', 'AI Enthusiast'];
+        let roleIndex = 0;
+        const roleEl = document.getElementById('rotating-role');
+
+        if (roleEl) {
+            setInterval(() => {
+                roleEl.style.opacity = '0';
+                setTimeout(() => {
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    roleEl.textContent = roles[roleIndex];
+                    roleEl.style.opacity = '1';
+                }, 500);
+            }, 2500);
+        }
+        
 });
