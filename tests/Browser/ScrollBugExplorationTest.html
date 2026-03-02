@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Bug Condition Exploration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        #test-results {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .counterexample {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bug Condition Exploration Test - Scroll Functionality</h1>
+
+    <div class="info">
+        <h3>Test Purpose:</h3>
+        <p><strong>Property 1: Fault Condition - Page Content is Scrollable</strong></p>
+        <p><strong>Validates: Requirements 2.2, 2.3</strong></p>
+        <p>This test verifies that when content height exceeds viewport height, the page allows vertical scrolling.</p>
+        <p><strong>CRITICAL:</strong> This test is EXPECTED TO FAIL on unfixed code (with overflow-hidden on parent
+            container).</p>
+        <p><strong>Expected Outcome:</strong> Test FAILS - this confirms the scroll bug exists.</p>
+    </div>
+
+    <button onclick="runScrollTest()">Run Scroll Bug Exploration Test</button>
+
+    <div id="test-results"></div>
+
+    <script>
+        /**
+         * Bug Condition Exploration Test for Scroll Functionality
+         * 
+         * This test implements Property 1 from the design document:
+         * "For any page state where content height exceeds viewport height,
+         * the fixed layout SHALL allow vertical scrolling through all content sections"
+         * 
+         * The test uses a scoped property-based approach focused on the concrete failing case:
+         * - Content height > viewport height
+         * - Page should allow vertical scrolling
+         * - Scrollbar should appear
+         * - Scroll events should work
+         * - Content below fold should be accessible
+         */
+
+        function runScrollTest() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<h2>Test Results:</h2>';
+
+            let allTestsPassed = true;
+            const counterexamples = [];
+
+            // Open the portfolio page in a new window for testing
+            const testWindow = window.open('http://localhost:8000', 'portfolioTest', 'width=1024,height=768');
+
+            if (!testWindow) {
+                resultsDiv.innerHTML += '<div class="test-result fail">❌ Failed to open test window. Please allow popups and ensure the Laravel server is running on http://localhost:8000</div>';
+                return;
+            }
+
+            // Wait for the page to load, then run tests
+            testWindow.addEventListener('load', function () {
+                setTimeout(() => {
+                    try {
+                        runTestsOnWindow(testWindow, resultsDiv, counterexamples);
+                    } catch (error) {
+                        resultsDiv.innerHTML += `<div class="test-result fail">❌ Error running tests: ${error.message}</div>`;
+                    }
+                }, 1000); // Give time for page to fully render
+            });
+        }
+
+        function runTestsOnWindow(testWindow, resultsDiv, counterexamples) {
+            const doc = testWindow.document;
+            const body = doc.body;
+            const html = doc.documentElement;
+
+            // Test 1: Check if content height exceeds viewport height
+            const contentHeight = Math.max(
+                body.scrollHeight,
+                body.offsetHeight,
+                html.clientHeight,
+                html.scrollHeight,
+                html.offsetHeight
+            );
+            const viewportHeight = testWindow.innerHeight;
+
+            resultsDiv.innerHTML += `<div class="info">
+                <strong>Measured Values:</strong><br>
+                Content Height: ${contentHeight}px<br>
+                Viewport Height: ${viewportHeight}px<br>
+                Content exceeds viewport: ${contentHeight > viewportHeight ? 'Yes' : 'No'}
+            </div>`;
+
+            if (contentHeight <= viewportHeight) {
+                resultsDiv.innerHTML += '<div class="test-result fail">⚠️ Warning: Content does not exceed viewport height. Test may not be valid. Try resizing the window smaller or adding more content.</div>';
+            }
+
+            // Test 2: Check if page is scrollable (overflow property)
+            const bodyOverflow = testWindow.getComputedStyle(body).overflow;
+            const bodyOverflowY = testWindow.getComputedStyle(body).overflowY;
+            const htmlOverflow = testWindow.getComputedStyle(html).overflow;
+            const htmlOverflowY = testWindow.getComputedStyle(html).overflowY;
+
+            resultsDiv.innerHTML += `<div class="info">
+                <strong>Overflow Properties:</strong><br>
+                body overflow: ${bodyOverflow}<br>
+                body overflow-y: ${bodyOverflowY}<br>
+                html overflow: ${htmlOverflow}<br>
+                html overflow-y: ${htmlOverflowY}
+            </div>`;
+
+            // Test 3: Check for overflow-hidden on parent containers
+            const mainContainer = doc.querySelector('.flex.h-full');
+            const parentContainer = doc.querySelector('.flex-1.flex.flex-col.lg\\:flex-row');
+
+            let hasOverflowHidden = false;
+            let overflowHiddenElement = null;
+
+            if (parentContainer) {
+                const parentOverflow = testWindow.getComputedStyle(parentContainer).overflow;
+                const parentOverflowY = testWindow.getComputedStyle(parentContainer).overflowY;
+
+                resultsDiv.innerHTML += `<div class="info">
+                    <strong>Parent Container Overflow:</strong><br>
+                    overflow: ${parentOverflow}<br>
+                    overflow-y: ${parentOverflowY}
+                </div>`;
+
+                if (parentOverflow === 'hidden' || parentOverflowY === 'hidden') {
+                    hasOverflowHidden = true;
+                    overflowHiddenElement = 'Parent container (.flex-1.flex.flex-col.lg:flex-row)';
+                }
+            }
+
+            // Test 4: Attempt to scroll programmatically
+            const initialScrollY = testWindow.scrollY;
+            testWindow.scrollTo(0, 100);
+            const scrolledY = testWindow.scrollY;
+            const canScroll = scrolledY > initialScrollY;
+
+            // Reset scroll position
+            testWindow.scrollTo(0, 0);
+
+            // Test 5: Check if scrollbar is visible
+            const hasVerticalScrollbar = contentHeight > viewportHeight &&
+                (bodyOverflowY === 'auto' || bodyOverflowY === 'scroll' ||
+                    htmlOverflowY === 'auto' || htmlOverflowY === 'scroll');
+
+            // Test 6: Check content area overflow
+            const contentArea = doc.querySelector('.flex-1.overflow-y-auto');
+            let contentAreaCanScroll = false;
+
+            if (contentArea) {
+                const contentAreaOverflowY = testWindow.getComputedStyle(contentArea).overflowY;
+                const contentAreaScrollHeight = contentArea.scrollHeight;
+                const contentAreaClientHeight = contentArea.clientHeight;
+
+                resultsDiv.innerHTML += `<div class="info">
+                    <strong>Content Area Properties:</strong><br>
+                    overflow-y: ${contentAreaOverflowY}<br>
+                    scrollHeight: ${contentAreaScrollHeight}px<br>
+                    clientHeight: ${contentAreaClientHeight}px<br>
+                    Can scroll: ${contentAreaScrollHeight > contentAreaClientHeight ? 'Yes' : 'No'}
+                </div>`;
+
+                contentAreaCanScroll = contentAreaScrollHeight > contentAreaClientHeight &&
+                    (contentAreaOverflowY === 'auto' || contentAreaOverflowY === 'scroll');
+            }
+
+            // Evaluate test results
+            let testsPassed = true;
+
+            // CRITICAL: For bug exploration, we EXPECT these tests to FAIL on unfixed code
+            // The test encodes the EXPECTED behavior (what should happen after fix)
+
+            if (!canScroll && contentHeight > viewportHeight) {
+                resultsDiv.innerHTML += '<div class="test-result fail">❌ TEST FAILED: Page cannot scroll despite content exceeding viewport height</div>';
+                counterexamples.push('Page with long content cannot scroll - scroll position remains at 0 after scrollTo(0, 100)');
+                testsPassed = false;
+            } else if (canScroll) {
+                resultsDiv.innerHTML += '<div class="test-result pass">✅ Page can scroll programmatically</div>';
+            }
+
+            if (hasOverflowHidden) {
+                resultsDiv.innerHTML += `<div class="test-result fail">❌ TEST FAILED: overflow-hidden detected on ${overflowHiddenElement}</div>`;
+                counterexamples.push(`${overflowHiddenElement} has overflow-hidden, preventing scroll`);
+                testsPassed = false;
+            }
+
+            if (!hasVerticalScrollbar && contentHeight > viewportHeight) {
+                resultsDiv.innerHTML += '<div class="test-result fail">❌ TEST FAILED: No vertical scrollbar visible despite content exceeding viewport</div>';
+                counterexamples.push('Scrollbar does not appear when content exceeds viewport height');
+                testsPassed = false;
+            } else if (hasVerticalScrollbar) {
+                resultsDiv.innerHTML += '<div class="test-result pass">✅ Vertical scrollbar is configured to appear</div>';
+            }
+
+            if (!contentAreaCanScroll && contentArea) {
+                resultsDiv.innerHTML += '<div class="test-result fail">❌ TEST FAILED: Content area cannot scroll (likely blocked by parent overflow-hidden)</div>';
+                counterexamples.push('Content area has overflow-y-auto but cannot scroll due to parent constraints');
+                testsPassed = false;
+            } else if (contentAreaCanScroll) {
+                resultsDiv.innerHTML += '<div class="test-result pass">✅ Content area can scroll</div>';
+            }
+
+            // Display counterexamples
+            if (counterexamples.length > 0) {
+                resultsDiv.innerHTML += '<div class="counterexample"><h3>Counterexamples Found:</h3><ul>';
+                counterexamples.forEach(example => {
+                    resultsDiv.innerHTML += `<li>${example}</li>`;
+                });
+                resultsDiv.innerHTML += '</ul></div>';
+            }
+
+            // Final result
+            if (!testsPassed) {
+                resultsDiv.innerHTML += `
+                    <div class="test-result fail">
+                        <h3>🎯 EXPECTED OUTCOME ACHIEVED: Test FAILED on unfixed code</h3>
+                        <p>This confirms the scroll bug exists. The test has successfully surfaced counterexamples demonstrating the bug.</p>
+                        <p><strong>Bug Confirmed:</strong> Content below viewport is inaccessible due to scroll prevention.</p>
+                        <p><strong>Root Cause:</strong> Parent container has overflow-hidden class preventing scrolling.</p>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML += `
+                    <div class="test-result pass">
+                        <h3>✅ All tests passed - Scroll functionality works correctly</h3>
+                        <p>This indicates the bug has been fixed or does not exist in the current code.</p>
+                    </div>
+                `;
+            }
+
+            // Note: Keep test window open for manual inspection
+            resultsDiv.innerHTML += '<div class="info"><strong>Note:</strong> The test window remains open for manual inspection. Close it when done.</div>';
+        }
+    </script>
+</body>
+
+</html>
