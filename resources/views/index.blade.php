@@ -127,7 +127,7 @@
                     <!-- Name and Title -->
                     <div>
                         <h1 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Cherop Sisco</h1>
-                        <p class="text-orange-500 font-semibold mt-1 text-sm lg:text-base">Aspiring Software Engineer</p>
+                        <p class="text-orange-500 font-semibold mt-1 text-sm lg:text-base">Software Engineer</p>
                         <p class="text-gray-500 dark:text-gray-400 text-xs lg:text-sm mt-1">📍 Kampala, Uganda</p>
                     </div>
 
