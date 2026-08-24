@@ -1,0 +1,2 @@
+@props(['href', 'title', 'icon'])
+<a href="{{ $href }}" title="{{ $title }}" target="_blank" rel="noopener noreferrer" {{ $attributes->merge(['class' => 'p-2 lg:p-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded-lg transition-colors']) }}><x-icon :name="$icon" fill="currentColor" class="w-3 h-3 lg:w-4 lg:h-4" /></a>
