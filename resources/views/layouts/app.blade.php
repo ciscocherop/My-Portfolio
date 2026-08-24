@@ -51,7 +51,7 @@
         <div class="flex-1 flex flex-col lg:flex-row">
             <div class="w-full lg:w-96 bg-white dark:bg-gray-800 border-b lg:border-r lg:border-b-0 border-gray-200 dark:border-gray-700 p-4 lg:p-8 flex flex-col items-center lg:justify-center">
                 <div class="text-center space-y-3 lg:space-y-6">
-                    <div class="relative w-24 h-24 lg:w-44 lg:h-44 mx-auto"><img src="/image/profile.jpeg" alt="Cherop Sisco" class="w-full h-full rounded-full object-cover border-2 lg:border-4 border-orange-500 shadow-lg"><span class="absolute bottom-2 right-2 w-4 h-4 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span></div>
+                    <div class="relative w-24 h-24 lg:w-44 lg:h-44 mx-auto"><img src="/image/profile.jpeg" alt="Cherop Sisco" width="176" height="176" loading="lazy" class="w-full h-full rounded-full object-cover border-2 lg:border-4 border-orange-500 shadow-lg"><span class="absolute bottom-2 right-2 w-4 h-4 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span></div>
                     <div><h1 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Cherop Sisco</h1><p class="text-orange-500 font-semibold mt-1 text-sm lg:text-base">Software Engineer</p><p class="text-gray-500 dark:text-gray-400 text-xs lg:text-sm mt-1">📍 Kampala, Uganda</p></div>
                     <div class="w-12 lg:w-16 h-1 bg-orange-500 rounded-full mx-auto"></div>
                     <div class="flex flex-wrap justify-center gap-1 lg:gap-2"><x-skill-badge>🎓 MUBS Student</x-skill-badge><x-skill-badge>💻 Laravel Dev</x-skill-badge><x-skill-badge>🤖 AI Enthusiast</x-skill-badge></div>
