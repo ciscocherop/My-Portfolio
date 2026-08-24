@@ -3,7 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'My Portfolio')</title>
+    @php
+        $portfolioUrl = rtrim(config('portfolio.url'), '/');
+        $portfolioDescription = config('portfolio.description');
+        $portfolioImage = $portfolioUrl . config('portfolio.image');
+    @endphp
+    <title>@yield('title', config('portfolio.name'))</title>
+    <meta name="description" content="{{ $portfolioDescription }}">
+    <link rel="canonical" href="{{ $portfolioUrl }}">
+    <meta property="og:title" content="@yield('title', config('portfolio.name'))">
+    <meta property="og:description" content="{{ $portfolioDescription }}">
+    <meta property="og:image" content="{{ $portfolioImage }}">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{{ $portfolioUrl }}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="@yield('title', config('portfolio.name'))">
+    <meta name="twitter:description" content="{{ $portfolioDescription }}">
+    <meta name="twitter:image" content="{{ $portfolioImage }}">
+    <script type="application/ld+json">
+        @json([
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => config('portfolio.name'),
+            'jobTitle' => config('portfolio.job_title'),
+            'url' => $portfolioUrl,
+            'image' => $portfolioImage,
+            'sameAs' => config('portfolio.social_links'),
+        ])
+    </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body data-initial-section="{{ session('success') || $errors->any() ? 'contact' : 'home' }}" class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
