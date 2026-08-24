@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize navigation
     const navigationManager = new NavigationManager();
+    navigationManager.showSection(document.body.dataset.initialSection || 'home');
 
     // Rotating role titles
         const roles = ['Software Engineer', 'Web Developer', 'Backend Developer', 'AI Enthusiast'];
