@@ -7,6 +7,15 @@
         $portfolioUrl = rtrim(config('portfolio.url'), '/');
         $portfolioDescription = config('portfolio.description');
         $portfolioImage = $portfolioUrl . config('portfolio.image');
+        $personSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => config('portfolio.name'),
+            'jobTitle' => config('portfolio.job_title'),
+            'url' => $portfolioUrl,
+            'image' => $portfolioImage,
+            'sameAs' => config('portfolio.social_links'),
+        ];
     @endphp
     <title>@yield('title', config('portfolio.name'))</title>
     <meta name="description" content="{{ $portfolioDescription }}">
@@ -21,15 +30,7 @@
     <meta name="twitter:description" content="{{ $portfolioDescription }}">
     <meta name="twitter:image" content="{{ $portfolioImage }}">
     <script type="application/ld+json">
-        @json([
-            '@context' => 'https://schema.org',
-            '@type' => 'Person',
-            'name' => config('portfolio.name'),
-            'jobTitle' => config('portfolio.job_title'),
-            'url' => $portfolioUrl,
-            'image' => $portfolioImage,
-            'sameAs' => config('portfolio.social_links'),
-        ])
+        @json($personSchema)
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
