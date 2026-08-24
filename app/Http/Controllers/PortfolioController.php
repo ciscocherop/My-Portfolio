@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-class PortflioController extends Controller
+class PortfolioController extends Controller
 {
     /**
      * Display the portfolio home (one-page layout).
