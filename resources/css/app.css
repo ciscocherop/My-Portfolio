@@ -6,8 +6,60 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Poppins — same as maxicodes.com */
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 @variant dark (&:where(.dark, .dark *));
+
+/* ── Smooth theme colour transitions ── */
+*,
+*::before,
+*::after {
+    transition-property: background-color, border-color, color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+button,
+a,
+[role="button"] {
+    transition-property: background-color, border-color, color, opacity, transform, box-shadow;
+    transition-duration: 150ms;
+}
+
+/* ── Active nav link ── */
+[data-nav-link][aria-current="page"] .nav-icon {
+    color: #f4c430;
+}
+
+[data-nav-link][aria-current="page"] .nav-label {
+    color: #f4c430;
+    font-weight: 600;
+}
+
+[data-nav-link][aria-current="page"] .nav-indicator {
+    opacity: 1;
+}
+
+[data-nav-link][aria-current="page"] {
+    background-color: rgba(244, 196, 48, 0.08);
+}
+
+/* ── Section fade-in ── */
+.content-section:not(.hidden) {
+    animation: fadeUp 0.2s ease both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

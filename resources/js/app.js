@@ -1,183 +1,110 @@
-// Theme Management
+// ── Theme Manager ──────────────────────────────
 class ThemeManager {
     constructor() {
-        this.theme = this.getStoredTheme() || this.getSystemTheme();
-        this.init();
+        this.theme = localStorage.getItem('theme') || this.systemTheme();
+        this.apply(this.theme);
     }
-
-    getStoredTheme() {
-        return localStorage.getItem('theme');
-    }
-
-    getSystemTheme() {
+    systemTheme() {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-
-    setTheme(theme) {
+    apply(theme) {
         this.theme = theme;
+        document.documentElement.classList.toggle('dark', theme === 'dark');
         localStorage.setItem('theme', theme);
-        this.applyTheme(theme);
     }
-
-    applyTheme(theme) {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }
-
-    toggleTheme() {
-        const newTheme = this.theme === 'dark' ? 'light' : 'dark';
-        this.setTheme(newTheme);
-    }
-
-    init() {
-        this.applyTheme(this.theme);
-    }
+    toggle() { this.apply(this.theme === 'dark' ? 'light' : 'dark'); }
 }
 
-// Navigation Management
+// ── Navigation Manager ─────────────────────────
 class NavigationManager {
-    constructor() {
-        this.currentSection = 'home';
-        this.init();
-    }
+    showSection(sectionId, pushState = true) {
+        if (!document.getElementById(`${sectionId}-section`)) sectionId = 'about';
 
-    showSection(sectionId, updateUrl = true) {
-        const targetSection = document.getElementById(`${sectionId}-section`);
-        if (!targetSection) {
-            sectionId = 'home';
-        }
-
-        // Hide all sections
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.add('hidden');
-        });
-
-        // Show selected section
+        document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
         document.getElementById(`${sectionId}-section`).classList.remove('hidden');
-        this.currentSection = sectionId;
-        this.updateActiveLink(sectionId);
+        document.querySelector('main')?.scrollTo({ top: 0 });
 
-        if (updateUrl) {
+        this.updateNav(sectionId);
+
+        if (pushState) {
             const url = new URL(window.location.href);
             url.hash = sectionId === 'home' ? '' : sectionId;
             history.pushState({ section: sectionId }, '', url);
         }
-
-        // Close mobile menu if open
-        if (window.innerWidth < 1024) {
-            this.closeMobileMenu();
-        }
     }
 
-    toggleMobileMenu() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('-translate-x-full');
-    }
+    updateNav(sectionId) {
+        document.querySelectorAll('[data-nav-link]').forEach(btn => {
+            const active = btn.getAttribute('data-section') === sectionId;
+            btn.setAttribute('aria-current', active ? 'page' : 'false');
 
-    closeMobileMenu() {
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar) {
-            sidebar.classList.add('-translate-x-full');
-        }
-    }
+            const icon = btn.querySelector('.nav-icon');
+            const label = btn.querySelector('.nav-label');
+            const bar = btn.querySelector('.nav-indicator');
 
-    updateActiveLink(sectionId) {
-        document.querySelectorAll('[data-nav-link]').forEach(link => {
-            if (link.getAttribute('data-section') === sectionId) {
-                link.setAttribute('aria-current', 'page');
-            } else {
-                link.removeAttribute('aria-current');
-            }
+            icon?.classList.toggle('text-[#f4c430]', active);
+            icon?.classList.toggle('dark:text-[#f4c430]', active);
+            icon?.classList.toggle('text-gray-400', !active);
+            icon?.classList.toggle('dark:text-gray-500', !active);
+
+            label?.classList.toggle('text-[#f4c430]', active);
+            label?.classList.toggle('font-semibold', active);
+            label?.classList.toggle('text-gray-400', !active);
+            label?.classList.toggle('dark:text-gray-500', !active);
+
+            bar?.classList.toggle('opacity-100', active);
+            bar?.classList.toggle('opacity-0', !active);
         });
     }
 
-    init() {
-        // Navigation link clicks
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const section = e.currentTarget.getAttribute('data-section');
-                if (section) {
-                    this.showSection(section);
-                }
+    bindEvents() {
+        document.querySelectorAll('[data-section]').forEach(el => {
+            el.addEventListener('click', e => {
+                const s = e.currentTarget.getAttribute('data-section');
+                if (s) this.showSection(s);
             });
         });
-
         window.addEventListener('popstate', () => {
             this.showSection(window.location.hash.slice(1) || 'home', false);
         });
-
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', () => {
-                this.toggleMobileMenu();
-            });
-        }
-
     }
 }
 
+// ── Role Rotator ───────────────────────────────
 class RoleRotator {
-    constructor(element, roles) {
-        this.element = element;
-        this.roles = roles;
-        this.roleIndex = 0;
-        this.intervalId = null;
-        this.timeoutId = null;
-        this.start();
+    constructor(el, roles) {
+        this.el = el; this.roles = roles; this.idx = 0;
+        this._i = null; this._t = null;
+        if (el) this.start();
     }
-
     start() {
-        if (!this.element) {
-            return;
-        }
-
-        this.intervalId = window.setInterval(() => {
-            this.element.style.opacity = '0';
-            this.timeoutId = window.setTimeout(() => {
-                this.roleIndex = (this.roleIndex + 1) % this.roles.length;
-                this.element.textContent = this.roles[this.roleIndex];
-                this.element.style.opacity = '1';
-            }, 500);
-        }, 2500);
+        this._i = setInterval(() => {
+            this.el.style.opacity = '0';
+            this._t = setTimeout(() => {
+                this.idx = (this.idx + 1) % this.roles.length;
+                this.el.textContent = this.roles[this.idx];
+                this.el.style.opacity = '1';
+            }, 800);  // wait for fade-out to finish before swapping text
+        }, 4000);     // swap every 4 seconds
     }
-
-    destroy() {
-        if (this.intervalId) {
-            window.clearInterval(this.intervalId);
-        }
-        if (this.timeoutId) {
-            window.clearTimeout(this.timeoutId);
-        }
-    }
+    destroy() { clearInterval(this._i); clearTimeout(this._t); }
 }
 
-// Initialize when DOM is ready
+// ── Bootstrap ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize theme manager
-    const themeManager = new ThemeManager();
-    
-    // Theme toggle button
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            themeManager.toggleTheme();
-        });
-    }
+    const theme = new ThemeManager();
+    document.getElementById('theme-toggle')?.addEventListener('click', () => theme.toggle());
 
-
-    // Initialize navigation
-    const navigationManager = new NavigationManager();
-    navigationManager.showSection(window.location.hash.slice(1) || document.body.dataset.initialSection || 'home', false);
-
-    // Rotating role titles
-    const roleRotator = new RoleRotator(
-        document.getElementById('rotating-role'),
-        ['Software Engineer', 'Web Developer', 'Backend Developer', 'AI Enthusiast']
+    const nav = new NavigationManager();
+    nav.bindEvents();
+    nav.showSection(
+        window.location.hash.slice(1) || document.body.dataset.initialSection || 'about',
+        false
     );
 
-    window.addEventListener('beforeunload', () => roleRotator.destroy(), { once: true });
+    const rotator = new RoleRotator(
+        document.getElementById('rotating-role'),
+        ['Software Developer', 'Data Scientist']
+    );
+    window.addEventListener('beforeunload', () => rotator.destroy(), { once: true });
 });
