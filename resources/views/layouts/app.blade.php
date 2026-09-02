@@ -89,7 +89,7 @@
 </nav>
 
 {{-- Mobile scrollable body --}}
-<div class="lg:hidden pt-16 pb-20 min-h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
+<div class="lg:hidden mobile-scroll pt-16 pb-20 min-h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
 
     {{-- Mobile profile card --}}
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-5 py-6 text-center">
@@ -127,10 +127,15 @@
 
     {{-- Mobile content sections --}}
     <div class="px-4 py-6">
-        <div id="content-area-mobile" class="max-w-2xl mx-auto">
-            {{-- sections injected here by JS --}}
-        </div>
+        <div id="content-area-mobile" class="max-w-2xl mx-auto"></div>
     </div>
+</div>
+
+{{-- ═══════════════════════════════════════
+     SHARED SECTIONS — hidden source, read by both mobile and desktop JS
+     ═══════════════════════════════════════ --}}
+<div id="sections-source" class="hidden">
+    @yield('content')
 </div>
 
 {{-- ═══════════════════════════════════════
@@ -208,7 +213,6 @@
     {{-- Scrollable content --}}
     <main class="flex-1 overflow-y-auto min-h-0 p-8 xl:p-12 bg-gray-50 dark:bg-gray-900">
         <div id="content-area" class="max-w-4xl mx-auto">
-            @yield('content')
         </div>
     </main>
 
