@@ -20,15 +20,37 @@ class NavigationManager {
     showSection(sectionId, pushState = true) {
         if (!document.getElementById(`${sectionId}-section`)) sectionId = 'about';
 
+        // Hide all sections
         document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`${sectionId}-section`).classList.remove('hidden');
+
+        // Show the target section
+        const section = document.getElementById(`${sectionId}-section`);
+        section.classList.remove('hidden');
+
+        // On mobile — clone section content into mobile content area
+        const mobileArea = document.getElementById('content-area-mobile');
+        if (mobileArea && window.innerWidth < 1024) {
+            mobileArea.innerHTML = section.innerHTML;
+            // Re-bind nav buttons inside cloned content
+            mobileArea.querySelectorAll('[data-section]').forEach(el => {
+                el.addEventListener('click', e => {
+                    const s = e.currentTarget.getAttribute('data-section');
+                    if (s) this.showSection(s);
+                });
+            });
+            // Scroll mobile body to top of content
+            const mobileBody = document.querySelector('.lg\\:hidden.pt-16');
+            if (mobileBody) mobileBody.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // On desktop — scroll content area to top
         document.querySelector('main')?.scrollTo({ top: 0 });
 
         this.updateNav(sectionId);
 
         if (pushState) {
             const url = new URL(window.location.href);
-            url.hash = sectionId === 'home' ? '' : sectionId;
+            url.hash = sectionId === 'about' ? '' : sectionId;
             history.pushState({ section: sectionId }, '', url);
         }
     }
@@ -38,22 +60,26 @@ class NavigationManager {
             const active = btn.getAttribute('data-section') === sectionId;
             btn.setAttribute('aria-current', active ? 'page' : 'false');
 
-            const icon = btn.querySelector('.nav-icon');
+            const icon  = btn.querySelector('.nav-icon');
             const label = btn.querySelector('.nav-label');
-            const bar = btn.querySelector('.nav-indicator');
+            const bar   = btn.querySelector('.nav-indicator');
 
-            icon?.classList.toggle('text-[#f4c430]', active);
-            icon?.classList.toggle('dark:text-[#f4c430]', active);
-            icon?.classList.toggle('text-gray-400', !active);
-            icon?.classList.toggle('dark:text-gray-500', !active);
-
-            label?.classList.toggle('text-[#f4c430]', active);
-            label?.classList.toggle('font-semibold', active);
-            label?.classList.toggle('text-gray-400', !active);
-            label?.classList.toggle('dark:text-gray-500', !active);
-
-            bar?.classList.toggle('opacity-100', active);
-            bar?.classList.toggle('opacity-0', !active);
+            if (icon) {
+                icon.classList.toggle('text-[#f4c430]', active);
+                icon.classList.toggle('text-gray-400',  !active);
+                icon.classList.toggle('dark:text-gray-500', !active);
+            }
+            if (label) {
+                label.classList.toggle('text-[#f4c430]', active);
+                label.classList.toggle('font-semibold',  active);
+                label.classList.toggle('text-gray-400',  !active);
+                label.classList.toggle('dark:text-gray-500', !active);
+            }
+            if (bar) {
+                bar.classList.toggle('opacity-100', active);
+                bar.classList.toggle('opacity-0',   !active);
+            }
+            btn.classList.toggle('bg-[#f4c430]/10', active);
         });
     }
 
@@ -65,36 +91,49 @@ class NavigationManager {
             });
         });
         window.addEventListener('popstate', () => {
-            this.showSection(window.location.hash.slice(1) || 'home', false);
+            this.showSection(window.location.hash.slice(1) || 'about', false);
         });
     }
 }
 
 // ── Role Rotator ───────────────────────────────
 class RoleRotator {
-    constructor(el, roles) {
-        this.el = el; this.roles = roles; this.idx = 0;
-        this._i = null; this._t = null;
-        if (el) this.start();
+    constructor(selector, roles) {
+        this.selector = selector;
+        this.roles    = roles;
+        this.idx      = 0;
+        this._i = null;
+        this._t = null;
+        this.start();
     }
+
+    getEl() { return document.getElementById(this.selector); }
+
     start() {
         this._i = setInterval(() => {
-            this.el.style.opacity = '0';
+            const el = this.getEl();
+            if (!el) return;
+            el.style.opacity = '0';
             this._t = setTimeout(() => {
                 this.idx = (this.idx + 1) % this.roles.length;
-                this.el.textContent = this.roles[this.idx];
-                this.el.style.opacity = '1';
-            }, 800);  // wait for fade-out to finish before swapping text
-        }, 4000);     // swap every 4 seconds
+                const el2 = this.getEl();
+                if (el2) { el2.textContent = this.roles[this.idx]; el2.style.opacity = '1'; }
+            }, 800);
+        }, 4000);
     }
+
     destroy() { clearInterval(this._i); clearTimeout(this._t); }
 }
 
 // ── Bootstrap ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    const theme = new ThemeManager();
-    document.getElementById('theme-toggle')?.addEventListener('click', () => theme.toggle());
 
+    // Theme — bind both desktop and mobile toggles
+    const theme = new ThemeManager();
+    document.getElementById('theme-toggle')?.addEventListener('click',        () => theme.toggle());
+    document.getElementById('theme-toggle-mobile')?.addEventListener('click', () => theme.toggle());
+
+    // Navigation
     const nav = new NavigationManager();
     nav.bindEvents();
     nav.showSection(
@@ -102,9 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         false
     );
 
-    const rotator = new RoleRotator(
-        document.getElementById('rotating-role'),
-        ['Software Developer', 'Data Scientist']
-    );
+    // Role rotator — works on both desktop and mobile
+    const rotator = new RoleRotator('rotating-role', ['Software Developer', 'Data Scientist']);
     window.addEventListener('beforeunload', () => rotator.destroy(), { once: true });
 });
