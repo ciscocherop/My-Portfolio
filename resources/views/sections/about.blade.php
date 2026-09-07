@@ -61,12 +61,16 @@
   <h2 class="text-title mb-4">What I Do</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
     @foreach ([
-      ['💻', 'Software Development',      'Building web and application solutions with React, JavaScript, Laravel, PHP, and RESTful APIs.'],
-      ['📊', 'Data Science &amp; ML',     'Uncovering insights and building predictive solutions with Python, Pandas, Scikit-learn, and Streamlit.'],
-      ['💼', 'Business &amp; Technology', 'Bridging business understanding and technical execution to create solutions that deliver real value.'],
+      ['/icons/software.png', 'Software Development',      'Building web and application solutions with React, JavaScript, Laravel, PHP, and RESTful APIs.'],
+      ['/icons/datascience.jpg', 'Data Science &amp; ML',  'Uncovering insights and building predictive solutions with Python, Pandas, Scikit-learn, and Streamlit.'],
+      [null,                  'Business &amp; Technology', 'Bridging business understanding and technical execution to create solutions that deliver real value.'],
     ] as [$icon, $title, $desc])
     <div class="card card-hover p-5 flex flex-col gap-2">
-      <span class="text-2xl" role="img" aria-hidden="true">{{ $icon }}</span>
+      @if($icon)
+        <img src="{{ $icon }}" alt="" class="w-8 h-8 object-contain" aria-hidden="true">
+      @else
+        <span class="text-2xl" role="img" aria-hidden="true">💼</span>
+      @endif
       <h3 class="font-semibold text-sm" style="color:var(--color-text-primary);">{!! $title !!}</h3>
       <p class="text-xs leading-relaxed" style="color:var(--color-text-muted);">{{ $desc }}</p>
     </div>

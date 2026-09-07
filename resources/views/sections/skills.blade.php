@@ -1,13 +1,13 @@
 @php
 $coreSkills = [
-  ['name'=>'Python',        'level'=>4,'emoji'=>'🐍','cat'=>'Data & Automation'],
-  ['name'=>'PHP / Laravel', 'level'=>4,'emoji'=>'⚡','cat'=>'Backend'],
-  ['name'=>'JavaScript',    'level'=>3,'emoji'=>'🌐','cat'=>'Frontend'],
-  ['name'=>'SQL / MySQL',   'level'=>4,'emoji'=>'🗄️','cat'=>'Database'],
-  ['name'=>'React',         'level'=>3,'emoji'=>'⚛️','cat'=>'Frontend'],
-  ['name'=>'Tailwind CSS',  'level'=>4,'emoji'=>'🪄','cat'=>'Styling'],
-  ['name'=>'Scikit-learn',  'level'=>3,'emoji'=>'🧠','cat'=>'Machine Learning'],
-  ['name'=>'Git / GitHub',  'level'=>4,'emoji'=>'🐙','cat'=>'DevOps'],
+  ['name'=>'Python',        'level'=>4,'icon'=>'/icons/pyhon.jpg',        'cat'=>'Data & Automation'],
+  ['name'=>'PHP / Laravel', 'level'=>4,'icon'=>'/icons/php,laravel.png',  'cat'=>'Backend'],
+  ['name'=>'JavaScript',    'level'=>3,'icon'=>'/icons/js.png',           'cat'=>'Frontend'],
+  ['name'=>'SQL / MySQL',   'level'=>4,'icon'=>null,                      'cat'=>'Database'],
+  ['name'=>'React',         'level'=>3,'icon'=>'/icons/react.png',        'cat'=>'Frontend'],
+  ['name'=>'Tailwind CSS',  'level'=>4,'icon'=>'/icons/twailwind.png',    'cat'=>'Styling'],
+  ['name'=>'Scikit-learn',  'level'=>3,'icon'=>'/icons/scikit.png',       'cat'=>'Machine Learning'],
+  ['name'=>'Git / GitHub',  'level'=>4,'icon'=>'/icons/github.png',       'cat'=>'DevOps'],
 ];
 $levelLabels = [1=>'Familiar',2=>'Learning',3=>'Comfortable',4=>'Proficient',5=>'Expert'];
 $tagGroups = [
@@ -44,7 +44,9 @@ $knowledge = [
       {{-- Core proficiency bars --}}
       <div>
         <div class="section-head">
-          <div class="section-head-icon" aria-hidden="true">💻</div>
+          <div class="section-head-icon" aria-hidden="true">
+            <img src="/icons/software.png" alt="" class="w-5 h-5 object-contain">
+          </div>
           <h3 class="text-section-label">Technical Proficiency</h3>
         </div>
         <div class="section-rule"></div>
@@ -54,7 +56,11 @@ $knowledge = [
           <li class="card card-hover px-4 py-3.5">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2.5">
-                <span class="text-lg leading-none" role="img" aria-hidden="true">{{ $s['emoji'] }}</span>
+                @if($s['icon'])
+                  <img src="{{ $s['icon'] }}" alt="{{ $s['name'] }} icon" class="w-6 h-6 rounded object-contain" aria-hidden="true">
+                @else
+                  <span class="w-6 h-6 rounded flex items-center justify-center text-sm" style="background:var(--color-border);">🗄️</span>
+                @endif
                 <div>
                   <span class="text-sm font-semibold" style="color:var(--color-text-primary);">{{ $s['name'] }}</span>
                   <span class="ml-1.5 text-xs" style="color:var(--color-text-muted);">{{ $s['cat'] }}</span>
@@ -133,9 +139,7 @@ $knowledge = [
         <ul class="space-y-2.5" aria-label="Knowledge areas">
           @foreach ($knowledge as $item)
           <li class="flex items-center gap-3">
-            <svg class="w-4 h-4 shrink-0" style="color:var(--color-accent-text);" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-            </svg>
+            <img src="/icons/tick.png" alt="" class="w-4 h-4 shrink-0 object-contain" aria-hidden="true">
             <span class="text-sm" style="color:var(--color-text-body);">{{ $item }}</span>
           </li>
           @endforeach

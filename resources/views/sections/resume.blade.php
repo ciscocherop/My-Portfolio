@@ -33,7 +33,9 @@ $projects = [
       {{-- Education --}}
       <div>
         <div class="section-head">
-          <div class="section-head-icon" aria-hidden="true">🎓</div>
+          <div class="section-head-icon" aria-hidden="true">
+            <img src="/icons/graduate.jpg" alt="" class="w-5 h-5 object-contain rounded">
+          </div>
           <h3 class="text-section-label">Education</h3>
         </div>
         <div class="section-rule"></div>
@@ -64,7 +66,9 @@ $projects = [
       {{-- Languages --}}
       <div>
         <div class="section-head">
-          <div class="section-head-icon" aria-hidden="true">🌍</div>
+          <div class="section-head-icon" aria-hidden="true">
+            <img src="/icons/world.jpg" alt="" class="w-5 h-5 object-contain rounded">
+          </div>
           <h3 class="text-section-label">Languages</h3>
         </div>
         <div class="section-rule"></div>
@@ -98,7 +102,9 @@ $projects = [
     {{-- ── RIGHT: Projects ── --}}
     <div>
       <div class="section-head">
-        <div class="section-head-icon" aria-hidden="true">🚀</div>
+        <div class="section-head-icon" aria-hidden="true">
+          <img src="/icons/github.png" alt="" class="w-5 h-5 object-contain">
+        </div>
         <h3 class="text-section-label">Featured Projects</h3>
       </div>
       <div class="section-rule"></div>

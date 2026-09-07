@@ -143,15 +143,18 @@
     {{-- Single H1 per page on mobile --}}
     <h1 class="text-xl font-bold mb-1" style="color:var(--color-text-primary);">{{ $name }}</h1>
     <p class="text-sm font-medium mb-1" style="color:var(--color-accent-text);">Software Developer &amp; Data Scientist</p>
-    <p class="text-xs mb-4" style="color:var(--color-text-muted);">📍 {{ config('portfolio.location') }}</p>
+    <p class="text-xs mb-4 flex items-center justify-center gap-1" style="color:var(--color-text-muted);">
+        <img src="/icons/location.png" alt="" class="w-3.5 h-3.5 object-contain" aria-hidden="true">
+        {{ config('portfolio.location') }}
+      </p>
 
     <div class="panel-divider mb-4"></div>
 
     {{-- Badges --}}
     <div class="flex flex-wrap justify-center gap-1.5 mb-4">
-      <span class="badge">🎓 Business Computing</span>
-      <span class="badge">✅ Open to Work</span>
-      <span class="badge">🌐 Remote · Onsite</span>
+      <span class="badge"><img src="/icons/graduate.jpg" alt="" class="w-3.5 h-3.5 object-contain inline-block rounded" aria-hidden="true"> Business Computing</span>
+      <span class="badge"><img src="/icons/tick.png" alt="" class="w-3.5 h-3.5 object-contain inline-block" aria-hidden="true"> Open to Work</span>
+      <span class="badge"><img src="/icons/world.jpg" alt="" class="w-3.5 h-3.5 object-contain inline-block rounded-full" aria-hidden="true"> Remote · Onsite</span>
     </div>
 
     {{-- Socials --}}
@@ -257,16 +260,19 @@
       <div>
         <h1 class="text-lg font-bold leading-tight" style="color:var(--color-text-primary);">{{ $name }}</h1>
         <p class="text-sm font-medium mt-1" style="color:var(--color-accent-text);">Software Developer &amp; Data Scientist</p>
-        <p class="text-xs mt-1" style="color:var(--color-text-muted);">📍 {{ config('portfolio.location') }}</p>
+        <p class="text-xs mt-1 flex items-center justify-center gap-1" style="color:var(--color-text-muted);">
+          <img src="/icons/location.png" alt="" class="w-3.5 h-3.5 object-contain" aria-hidden="true">
+          {{ config('portfolio.location') }}
+        </p>
       </div>
 
       <div class="panel-divider"></div>
 
       {{-- Badges --}}
       <div class="flex flex-wrap justify-center gap-1.5">
-        <span class="badge">🎓 Business Computing</span>
-        <span class="badge">✅ Open to Work</span>
-        <span class="badge">🌐 Remote · Onsite</span>
+        <span class="badge"><img src="/icons/graduate.jpg" alt="" class="w-3.5 h-3.5 object-contain inline-block rounded" aria-hidden="true"> Business Computing</span>
+        <span class="badge"><img src="/icons/tick.png" alt="" class="w-3.5 h-3.5 object-contain inline-block" aria-hidden="true"> Open to Work</span>
+        <span class="badge"><img src="/icons/world.jpg" alt="" class="w-3.5 h-3.5 object-contain inline-block rounded-full" aria-hidden="true"> Remote · Onsite</span>
       </div>
 
       {{-- Socials --}}
