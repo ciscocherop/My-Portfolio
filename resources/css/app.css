@@ -604,6 +604,18 @@ select,
 /* ─────────────────────────────────────────────
    DARK MODE SURFACES
 ───────────────────────────────────────────── */
-:where(.dark) body {
-    background: var(--color-surface-dark);
+:where(.dark) {
+    --color-surface:      #18181B;
+    --color-surface-card: #27272A;
+    --color-border:       #3F3F46;
+    --color-text-primary: #FAFAFA;
+    --color-text-body:    #A1A1AA;
+    --color-text-muted:   #71717A;
+    --color-text-xmuted:  #52525B;
+    --color-accent:       #F4C430;
+    --color-accent-hover: #E0B020;
+    --color-accent-muted: rgba(244,196,48,0.12);
+    --color-accent-text:  #F4C430;
+    --color-error-bg:     rgba(220,38,38,0.15);
+    --color-success-bg:   rgba(22,163,74,0.15);
 }
