@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cherop Sisco — Software Developer &amp; Data Scientist</title>
+  <meta name="description" content="Business Computing graduate with a strong interest in software development, data science, and machine learning. I enjoy turning ideas and real-world problems into practical technology solutions.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Twitter (link previews on WhatsApp, LinkedIn, X) -->
+  <meta property="og:title" content="Cherop Sisco — Portfolio">
+  <meta property="og:description" content="Junior Software Developer | Data Science & Machine Learning Enthusiast">
+  <meta property="og:image" content="/image/portfolio.jpeg">
+  <meta property="og:type" content="profile">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cherop Sisco — Portfolio">
+  <meta name="twitter:description" content="Junior Software Developer | Data Science & Machine Learning Enthusiast">
+  <meta name="twitter:image" content="/image/portfolio.jpeg">
+  <meta name="twitter:creator" content="@cherryCisco">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Cherop Sisco",
+      "jobTitle": "Junior Software Developer | Data Science & Machine Learning Enthusiast",
+      "sameAs": [
+        "https://github.com/ciscocherop",
+        "https://www.linkedin.com/in/sisco-cherop-193477294/",
+        "https://x.com/cherryCisco"
+      ]
+    }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Apply the saved theme before first paint so dark mode doesn't flash white -->
+  <script>
+    try {
+      var t = localStorage.getItem('theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', t === 'dark');
+    } catch (e) {}
+  </script>
+</head>
+<body class="h-full antialiased" style="background: var(--color-surface); color: var(--color-text-primary);">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
