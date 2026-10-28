@@ -37,7 +37,7 @@ export const profile = {
     ],
 
     // Paste the access key Web3Forms emailed you (see README)
-    web3formsKey: 'YOUR_WEB3FORMS_ACCESS_KEY',
+    web3formsKey: '71cbe1b8-cb27-48eb-a349-7e506239efed',
 };
 
 export const about = {
