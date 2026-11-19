@@ -26,7 +26,7 @@ export const education = [
         note: null,
     },
     {
-        date: '2015 – 2019',
+        date: '2016 – 2019',
         active: false,
         degree: 'Uganda Certificate of Education',
         school: 'John Paul Secondary School, Chelekura',
